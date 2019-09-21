@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+	<entry key="jdbc.driver">org.hsqldb.jdbcDriver</entry>
+        <!--
+	<entry key="jdbc.url">jdbc:hsqldb:mem:revolut;sql.syntax_ora=true</entry>
+        -->
+        <entry key="jdbc.url">jdbc:hsqldb:mem:revolut;sql.syntax_ora=true</entry>
+	<entry key="jdbc.username">revolut</entry>
+	<entry key="jdbc.password">revolut</entry>
+</properties>
