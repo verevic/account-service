@@ -1,0 +1,270 @@
+{
+	"info": {
+		"_postman_id": "df235826-4143-443d-bb59-2398232d407a",
+		"name": "revolut",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get accounts",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/owners/0",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"owners",
+						"0"
+					]
+				},
+				"description": "List owners"
+			},
+			"response": []
+		},
+		{
+			"name": "Get owners",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/owners",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"owners"
+					]
+				},
+				"description": "List owners"
+			},
+			"response": []
+		},
+		{
+			"name": "Create owner",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"name\":\"Victor\", \"address\":{\"address\":\"Saburovo park\"}, \"email\":\"verevic@revolut.com\"}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/owners",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"owners"
+					]
+				},
+				"description": "Create an owner"
+			},
+			"response": []
+		},
+		{
+			"name": "Create account 0",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"amount\":\"350000\", \"ccy\":\"RUB\"}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/owners/0",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"owners",
+						"0"
+					]
+				},
+				"description": "Create an owner"
+			},
+			"response": []
+		},
+		{
+			"name": "Create account 1",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"amount\":\"500000\", \"ccy\":\"RUB\"}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/owners/0",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"owners",
+						"0"
+					]
+				},
+				"description": "Create an owner"
+			},
+			"response": []
+		},
+		{
+			"name": "deposit",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"amount\":\"1000\", \"ccy\":\"RUB\"}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/accounts/0/deposit",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"accounts",
+						"0",
+						"deposit"
+					]
+				},
+				"description": "Create an owner"
+			},
+			"response": []
+		},
+		{
+			"name": "withdraw",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"amount\":\"1000\", \"ccy\":\"RUB\"}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/accounts/0/withdraw",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"accounts",
+						"0",
+						"withdraw"
+					]
+				},
+				"description": "Create an owner"
+			},
+			"response": []
+		},
+		{
+			"name": "transfer",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Accept",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"amount\":\"100000\", \"ccy\":\"RUB\"}"
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/accounts/0/1/transfer",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"accounts",
+						"0",
+						"1",
+						"transfer"
+					]
+				},
+				"description": "Create an owner"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

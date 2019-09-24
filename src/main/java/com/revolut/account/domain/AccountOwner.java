@@ -63,14 +63,10 @@ public class AccountOwner {
 
 	// Need one for e.g. json parser
 	public static class Builder {
-		private long id;
 		private String name;
 		private Address.Builder address;
 		private String email;
 
-		public void setId(long id) {
-			this.id = id;
-		}
 		public void setName(String name) {
 			this.name = name;
 		}
@@ -81,21 +77,8 @@ public class AccountOwner {
 			this.email = email;
 		}
 
-		public long getId() {
-			return id;
-		}
-		public String getName() {
-			return name;
-		}
-		public Address.Builder getAddress() {
-			return address;
-		}
-		public String getEmail() {
-			return email;
-		}
-
 		public AccountOwner build() {
-			return new AccountOwner(id, name, address.build(), email);
+			return new AccountOwner(-1, name, address.build(), email);
 		}
 	}
 }

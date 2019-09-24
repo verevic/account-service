@@ -52,4 +52,22 @@ public class Account {
 		}
 		return amount.equals(other.amount);
 	}
+
+	// Mutable class for json parser
+	public static class Builder {
+		// Account is normally passed in in a "create" request -- no id...
+		private long ownerId;
+		private Amount amount;
+
+		public void setOwnerId(long ownerId) {
+			this.ownerId = ownerId;
+		}
+		public void setAmount(Amount amount) {
+			this.amount = amount;
+		}
+
+		public Account build() {
+			return new Account(-1, ownerId, amount);
+		}
+	}
 }

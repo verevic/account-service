@@ -8,40 +8,39 @@ import java.util.Currency;
 import java.util.List;
 
 import com.revolut.account.domain.Account;
-import com.revolut.account.domain.AccountOwner;
 import com.revolut.account.domain.Amount;
 import com.revolut.dao.JDBCUtils;
 
 public class AccountDAO {
 	private static final String CREATE_ACCOUNT =
 			"insert into Account (owner_id, amount, ccy) values (%d, %s, '%s')";
-	public static Account createAccount(Connection c, AccountOwner owner, Amount amount) throws SQLException {
-		String sql = String.format(CREATE_ACCOUNT, owner.getId(), amount.getAmount().toString(), amount.getCurrency().getCurrencyCode());
+	public static Account createAccount(Connection c, long ownerId, Amount amount) throws SQLException {
+		String sql = String.format(CREATE_ACCOUNT, ownerId, amount.getAmount().toString(), amount.getCurrency().getCurrencyCode());
 		return JDBCUtils.executeInsert(c, sql, AccountDAO::fromResultSet, 4);
 		
 	}
 
 	private static final String GET_ACCOUNTS =
 			"select id, owner_id, amount, ccy from Account where owner_id = %d order by id";
-	public static List<Account> getAccounts(Connection c, AccountOwner owner) throws SQLException {
-		String sql = String.format(GET_ACCOUNTS, owner.getId());
+	public static List<Account> getAccounts(Connection c, long ownerId) throws SQLException {
+		String sql = String.format(GET_ACCOUNTS, ownerId);
 		return JDBCUtils.executeSelect(c, sql, AccountDAO::fromResultSet);
 	}
 
 	private static final String CREDIT =
 			"update Account set amount = amount+%s where id=%d and ccy='%s';" +
 			"select id, owner_id, amount, ccy from Account where id=%d;";
-	public static Account credit(Connection c, Account account, Amount amount) throws SQLException {
-		String sql = String.format(CREDIT, amount.getAmount(), account.getId(), account.getAmount().getCurrency().getCurrencyCode(), account.getId());
+	public static Account credit(Connection c, long accountId, Amount amount) throws SQLException {
+		String sql = String.format(CREDIT, amount.getAmount(), accountId, amount.getCurrency().getCurrencyCode(), accountId);
 		return JDBCUtils.executeSelectSingle(c, sql, AccountDAO::fromResultSet);
 	}
 
 	private static final String DEBIT =
 			"update Account set amount = amount-%s where id=%d and ccy='%s';" +
 			"select id, owner_id, amount, ccy from Account where id=%d;";
-	public static Account debit(Connection c, Account account, Amount amount) throws SQLException {
+	public static Account debit(Connection c, long accountId, Amount amount) throws SQLException {
 		// TODO: make sure cannot withdraw more than have
-		String sql = String.format(DEBIT, amount.getAmount(), account.getId(), account.getAmount().getCurrency().getCurrencyCode(), account.getId());
+		String sql = String.format(DEBIT, amount.getAmount(), accountId, amount.getCurrency().getCurrencyCode(), accountId);
 		return JDBCUtils.executeSelectSingle(c, sql, AccountDAO::fromResultSet);
 	}
 

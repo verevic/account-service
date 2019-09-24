@@ -28,7 +28,7 @@ public class AccountDAOTest extends DatabaseTest {
 
 		BigDecimal amount = new BigDecimal("3.5E+5");
 		Currency ccy = Currency.getInstance("RUB");
-		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner, new Amount(amount, ccy)));
+		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner.getId(), new Amount(amount, ccy)));
 
 		Assertions.assertNotNull(account);
 		Assertions.assertTrue(account.getId() >= 0);
@@ -43,15 +43,15 @@ public class AccountDAOTest extends DatabaseTest {
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c,
 				new AccountOwner(-1, "An owner", new Address("Address"), "email")));
 
-		List<Account> accounts = transactionManager.runWithResult(c -> AccountDAO.getAccounts(c, owner));
+		List<Account> accounts = transactionManager.runWithResult(c -> AccountDAO.getAccounts(c, owner.getId()));
 		Assertions.assertNotNull(accounts);
 		Assertions.assertEquals(0, accounts.size());
-		
+
 		BigDecimal amount = new BigDecimal("3.5E+5");
 		Currency ccy = Currency.getInstance("RUB");
-		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner, new Amount(amount, ccy)));
+		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner.getId(), new Amount(amount, ccy)));
 
-		accounts = transactionManager.runWithResult(c -> AccountDAO.getAccounts(c, owner));
+		accounts = transactionManager.runWithResult(c -> AccountDAO.getAccounts(c, owner.getId()));
 		Assertions.assertNotNull(accounts);
 		Assertions.assertEquals(1, accounts.size());
 		Assertions.assertEquals(account, accounts.get(0));
@@ -66,8 +66,8 @@ public class AccountDAOTest extends DatabaseTest {
 		BigDecimal credit = new BigDecimal("123456789");
 		Currency ccy = Currency.getInstance("RUB");
 
-		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner, new Amount(amount, ccy)));
-		Account credited = transactionManager.runWithResult(c -> AccountDAO.credit(c, account, new Amount(credit,ccy)));
+		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner.getId(), new Amount(amount, ccy)));
+		Account credited = transactionManager.runWithResult(c -> AccountDAO.credit(c, account.getId(), new Amount(credit,ccy)));
 		Assertions.assertNotNull(credited);
 		Assertions.assertEquals(account.getId(), credited.getId());
 		BigDecimal expected = amount.add(credit);
@@ -84,9 +84,9 @@ public class AccountDAOTest extends DatabaseTest {
 		BigDecimal debit = new BigDecimal("123456789");
 		Currency ccy = Currency.getInstance("RUB");
 
-		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner, new Amount(amount, ccy)));
+		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner.getId(), new Amount(amount, ccy)));
 
-		Account debited = transactionManager.runWithResult(c -> AccountDAO.debit(c, account, new Amount(debit,ccy)));
+		Account debited = transactionManager.runWithResult(c -> AccountDAO.debit(c, account.getId(), new Amount(debit,ccy)));
 		Assertions.assertNotNull(debited);
 		Assertions.assertEquals(account.getId(), debited.getId());
 		BigDecimal expected = amount.subtract(debit);

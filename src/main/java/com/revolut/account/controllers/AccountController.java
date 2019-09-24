@@ -1,23 +1,49 @@
 package com.revolut.account.controllers;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.Currency;
-import java.util.List;
+import javax.inject.Inject;
 
+import com.revolut.ServiceException;
 import com.revolut.account.domain.Account;
 import com.revolut.account.domain.Amount;
+import com.revolut.account.service.AccountService;
 
 import io.micronaut.http.MediaType;
+import io.micronaut.http.annotation.Body;
+import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
+import io.micronaut.http.annotation.Put;
 
 @Controller("/accounts")
 public class AccountController {
-	@Get("/{ownerId}")
+	private final AccountService service;
+
+	@Inject
+	public AccountController(AccountService service) {
+		this.service = service;
+	}
+
+	// deposit, withdraw, transfer
+	@Put("/{accountId}/deposit")
+	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Account> listAccounts(long ownerId) {
-		return Collections.singletonList(new Account(1, ownerId, new Amount(new BigDecimal(3.5e5), Currency.getInstance("RUB"))));
+	public Account deposit(long accountId, @Body Amount.Builder builder) throws ServiceException {
+		Amount amount = builder.build();
+		return service.deposit(accountId, amount);
+	}
+
+	@Put("/{accountId}/withdraw")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Account withdraw(long accountId, @Body Amount.Builder builder) throws ServiceException {
+		Amount amount = builder.build();
+		return service.withdraw(accountId, amount);
+	}
+
+	@Put("/{fromId}/{toId}/transfer")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void transfer(long fromId, long toId, @Body Amount.Builder builder) throws ServiceException {
+		Amount amount = builder.build();
+		service.transfer(fromId, toId, amount);
 	}
 }

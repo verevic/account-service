@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import javax.inject.Inject;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 
 import io.micronaut.test.annotation.MicronautTest;
 
@@ -18,20 +17,20 @@ public class DatabaseTest {
 	@Inject
 	private TransactionManager transactionManager;
 
-	@BeforeEach
-	public void dbSetup() throws SQLException {
-		transactionManager.run(SchemaInitializer::setup);
-	}
+//	@BeforeEach
+//	public void dbSetup() throws SQLException {
+//		transactionManager.run(SchemaInitializer::setup);
+//	}
 
 	@AfterEach
 	public void clearDB() throws SQLException {
 		transactionManager.run(c -> {
-//			c.createStatement().execute("delete from AccountOperation");
-//			c.createStatement().execute("delete from Account");
-//			c.createStatement().execute("delete from AccountOwner");
-			c.createStatement().execute("drop table AccountOperation");
-			c.createStatement().execute("drop table Account");
-			c.createStatement().execute("drop table AccountOwner");
+			c.createStatement().execute("delete from AccountOperation");
+			c.createStatement().execute("delete from Account");
+			c.createStatement().execute("delete from AccountOwner");
+//			c.createStatement().execute("drop table AccountOperation");
+//			c.createStatement().execute("drop table Account");
+//			c.createStatement().execute("drop table AccountOwner");
 		});
 	}
 

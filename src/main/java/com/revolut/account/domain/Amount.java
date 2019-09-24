@@ -34,15 +34,6 @@ public class Amount {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -63,5 +54,22 @@ public class Amount {
 			return false;
 
 		return true;
+	}
+
+	// Mutable class for json parser
+	public static class Builder {
+		private String ccy;
+		private BigDecimal amount;
+
+		public void setCcy(String ccy) {
+			this.ccy = ccy;
+		}
+		public void setAmount(BigDecimal amount) {
+			this.amount = amount;
+		}
+
+		public Amount build() {
+			return new Amount(amount, Currency.getInstance(ccy));
+		}
 	}
 }

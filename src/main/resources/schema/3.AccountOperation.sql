@@ -3,7 +3,6 @@ create table AccountOperation(
   account_id  integer foreign key references Account(id),
   created     datetime default current_timestamp,
   details     varchar(200),
-  start       float not null,
-  end         float not null,
+  balance     float not null,
   ccy         varchar(3) not null
 );

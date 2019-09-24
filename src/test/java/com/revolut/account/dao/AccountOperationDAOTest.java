@@ -29,12 +29,12 @@ public class AccountOperationDAOTest extends DatabaseTest {
 
 		Currency ccy = Currency.getInstance("RUB");
 		BigDecimal initial = new BigDecimal("12345678");
-		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner, new Amount(initial, ccy)));
+		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner.getId(), new Amount(initial, ccy)));
 
 		String details = "testCreateOperation";
 		BigDecimal changed = new BigDecimal("87654321");
 		AccountOperation operation = transactionManager.runWithResult(c -> AccountOperationDAO.createOperation(c,
-				new AccountOperation(-1, account.getId(), null, details, new Amount(initial, ccy), new Amount(changed, ccy))));
+				new AccountOperation(-1, account.getId(), null, details, new Amount(changed, ccy))));
 
 		Assertions.assertNotNull(operation);
 		Assertions.assertTrue(operation.getId() >= 0);
@@ -42,11 +42,8 @@ public class AccountOperationDAOTest extends DatabaseTest {
 		Assertions.assertNotNull(operation.getTimestamp());
 		Assertions.assertEquals(details, operation.getDetails());
 
-		Assertions.assertEquals(0, initial.compareTo(operation.getStartBalance().getAmount()));
-		Assertions.assertEquals(ccy, operation.getStartBalance().getCurrency());
-
-		Assertions.assertEquals(0, changed.compareTo(operation.getEndBalance().getAmount()));
-		Assertions.assertEquals(ccy, operation.getEndBalance().getCurrency());
+		Assertions.assertEquals(0, changed.compareTo(operation.getBalance().getAmount()));
+		Assertions.assertEquals(ccy, operation.getBalance().getCurrency());
 	}
 
 	@Test
@@ -56,12 +53,12 @@ public class AccountOperationDAOTest extends DatabaseTest {
 
 		Currency ccy = Currency.getInstance("RUB");
 		BigDecimal initial = new BigDecimal("12345678");
-		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner, new Amount(initial, ccy)));
+		Account account = transactionManager.runWithResult(c -> AccountDAO.createAccount(c, owner.getId(), new Amount(initial, ccy)));
 
 		String details = "testGetOperationsFor";
 		BigDecimal changed = new BigDecimal("87654321");
 		transactionManager.runWithResult(c -> AccountOperationDAO.createOperation(c,
-			new AccountOperation(-1, account.getId(), null, details, new Amount(initial, ccy), new Amount(changed, ccy))));
+			new AccountOperation(-1, account.getId(), null, details, new Amount(changed, ccy))));
 
 		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account));
 		Assertions.assertNotNull(operations);
@@ -74,10 +71,7 @@ public class AccountOperationDAOTest extends DatabaseTest {
 		Assertions.assertNotNull(operation.getTimestamp());
 		Assertions.assertEquals(details, operation.getDetails());
 
-		Assertions.assertEquals(0, initial.compareTo(operation.getStartBalance().getAmount()));
-		Assertions.assertEquals(ccy, operation.getStartBalance().getCurrency());
-
-		Assertions.assertEquals(0, changed.compareTo(operation.getEndBalance().getAmount()));
-		Assertions.assertEquals(ccy, operation.getEndBalance().getCurrency());
+		Assertions.assertEquals(0, changed.compareTo(operation.getBalance().getAmount()));
+		Assertions.assertEquals(ccy, operation.getBalance().getCurrency());
 	}
 }

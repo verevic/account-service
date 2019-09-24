@@ -17,17 +17,14 @@ public class AccountOperation {
 	private final long accountId;
 	private final Date timestamp;
 	private final String details;
-	private final Amount startBalance;
-	private final Amount endBalance;
+	private final Amount balance;	// resulting balance
 
-	public AccountOperation(long id, long accountId, Date timestamp, String details, Amount startBalance,
-			Amount endBalance) {
+	public AccountOperation(long id, long accountId, Date timestamp, String details, Amount balance) {
 		this.id = id;
 		this.accountId = accountId;
 		this.timestamp = timestamp;
 		this.details = details;
-		this.startBalance = startBalance;
-		this.endBalance = endBalance;
+		this.balance = balance;
 	}
 
 	public long getId() {
@@ -46,11 +43,7 @@ public class AccountOperation {
 		return details;
 	}
 
-	public Amount getStartBalance() {
-		return startBalance;
-	}
-
-	public Amount getEndBalance() {
-		return endBalance;
+	public Amount getBalance() {
+		return balance;
 	}
 }

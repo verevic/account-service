@@ -6,7 +6,7 @@ micronaut:
 ---
 datasources:
   default:
-    url: jdbc:hsqldb:mem:revolut;sql.syntax_ora=true
+    url: jdbc:hsqldb:mem:revolut;sql.syntax_ora=true;server.restart_on_shutdown=true;shutdown=true
     username: sa
     password: ""
     driverClassName: org.hsqldb.jdbcDriver

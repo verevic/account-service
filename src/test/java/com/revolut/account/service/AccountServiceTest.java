@@ -35,7 +35,7 @@ public class AccountServiceTest extends DatabaseTest {
 		// New account
 		BigDecimal amount = new BigDecimal("3.5E+5");
 		Currency ccy = Currency.getInstance("RUB");
-		Account account = service.createAccount(owner, new Amount(amount, ccy));
+		Account account = service.createAccount(owner.getId(), new Amount(amount, ccy));
 		Assertions.assertNotNull(account);
 		Assertions.assertEquals(owner.getId(), account.getOwnerId());
 		Assertions.assertEquals(0, amount.compareTo(account.getAmount().getAmount()));
@@ -50,11 +50,8 @@ public class AccountServiceTest extends DatabaseTest {
 		Assertions.assertNotNull(op.getTimestamp());
 		Assertions.assertEquals("Account created", op.getDetails());
 
-		Assertions.assertEquals(0, BigDecimal.ZERO.compareTo(op.getStartBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getStartBalance().getCurrency());
-
-		Assertions.assertEquals(0, amount.compareTo(op.getEndBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getEndBalance().getCurrency());
+		Assertions.assertEquals(0, amount.compareTo(op.getBalance().getAmount()));
+		Assertions.assertEquals(ccy, op.getBalance().getCurrency());
 	}
 
 	@Test
@@ -62,15 +59,15 @@ public class AccountServiceTest extends DatabaseTest {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 
-		List<Account> accounts = service.getAccountsFor(owner);
+		List<Account> accounts = service.getAccountsFor(owner.getId());
 		Assertions.assertNotNull(accounts);
 		Assertions.assertEquals(0, accounts.size());
 
 		BigDecimal amount = new BigDecimal("3.5E+5");
 		Currency ccy = Currency.getInstance("RUB");
-		Account account = service.createAccount(owner, new Amount(amount, ccy));
+		Account account = service.createAccount(owner.getId(), new Amount(amount, ccy));
 		
-		accounts = service.getAccountsFor(owner);
+		accounts = service.getAccountsFor(owner.getId());
 		Assertions.assertNotNull(accounts);
 		Assertions.assertEquals(1, accounts.size());
 		Assertions.assertEquals(account, accounts.get(0));
@@ -83,11 +80,11 @@ public class AccountServiceTest extends DatabaseTest {
 
 		BigDecimal amount = new BigDecimal("3.5E+5");
 		Currency ccy = Currency.getInstance("RUB");
-		Account account = service.createAccount(owner, new Amount(amount, ccy));
+		Account account = service.createAccount(owner.getId(), new Amount(amount, ccy));
 	
 		BigDecimal credit = new BigDecimal(123456);
 		Amount creditAmount = new Amount(credit, ccy);
-		Account acc = service.deposit(account, creditAmount);
+		Account acc = service.deposit(account.getId(), creditAmount);
 		Assertions.assertNotNull(acc);
 		Assertions.assertEquals(account.getId(), acc.getId());
 		BigDecimal expected = amount.add(credit);
@@ -102,11 +99,8 @@ public class AccountServiceTest extends DatabaseTest {
 		Assertions.assertNotNull(op.getTimestamp());
 		Assertions.assertEquals(String.format("A deposit for %s", creditAmount), op.getDetails());
 
-		Assertions.assertEquals(0, amount.compareTo(op.getStartBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getStartBalance().getCurrency());
-
-		Assertions.assertEquals(0, expected.compareTo(op.getEndBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getEndBalance().getCurrency());
+		Assertions.assertEquals(0, expected.compareTo(op.getBalance().getAmount()));
+		Assertions.assertEquals(ccy, op.getBalance().getCurrency());
 	}
 
 	@Test
@@ -116,11 +110,11 @@ public class AccountServiceTest extends DatabaseTest {
 
 		BigDecimal amount = new BigDecimal("3.5E+5");
 		Currency ccy = Currency.getInstance("RUB");
-		Account account = service.createAccount(owner, new Amount(amount, ccy));
+		Account account = service.createAccount(owner.getId(), new Amount(amount, ccy));
 
 		BigDecimal debit = new BigDecimal(123456);
 		Amount debitAmount = new Amount(debit, ccy);
-		Account acc = service.withdraw(account, debitAmount);
+		Account acc = service.withdraw(account.getId(), debitAmount);
 		Assertions.assertNotNull(acc);
 		Assertions.assertEquals(account.getId(), acc.getId());
 		BigDecimal expected = amount.subtract(debit);
@@ -135,11 +129,8 @@ public class AccountServiceTest extends DatabaseTest {
 		Assertions.assertNotNull(op.getTimestamp());
 		Assertions.assertEquals(String.format("A withdrawal of %s", debitAmount), op.getDetails());
 
-		Assertions.assertEquals(0, amount.compareTo(op.getStartBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getStartBalance().getCurrency());
-
-		Assertions.assertEquals(0, expected.compareTo(op.getEndBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getEndBalance().getCurrency());
+		Assertions.assertEquals(0, expected.compareTo(op.getBalance().getAmount()));
+		Assertions.assertEquals(ccy, op.getBalance().getCurrency());
 	}
 
 	@Test
@@ -149,12 +140,12 @@ public class AccountServiceTest extends DatabaseTest {
 
 		BigDecimal amount = new BigDecimal("3.5E+5");
 		Currency ccy = Currency.getInstance("RUB");
-		Account from = service.createAccount(owner, new Amount(amount, ccy));
-		Account to = service.createAccount(owner, new Amount(BigDecimal.ZERO, ccy));
+		Account from = service.createAccount(owner.getId(), new Amount(amount, ccy));
+		Account to = service.createAccount(owner.getId(), new Amount(BigDecimal.ZERO, ccy));
 
 		Amount transferAmount = new Amount(amount, ccy);
-		service.transfer(from, to, transferAmount);
-		List<Account> accounts = service.getAccountsFor(owner);
+		service.transfer(from.getId(), to.getId(), transferAmount);
+		List<Account> accounts = service.getAccountsFor(owner.getId());
 		Assertions.assertEquals(2, accounts.size());
 
 		// From
@@ -169,13 +160,10 @@ public class AccountServiceTest extends DatabaseTest {
 		AccountOperation op = operations.get(1);
 		Assertions.assertEquals(newFrom.getId(), op.getAccountId());
 		Assertions.assertNotNull(op.getTimestamp());
-		Assertions.assertEquals(String.format("A transfer of %s to %s", transferAmount, to), op.getDetails());
+		Assertions.assertEquals(String.format("A transfer of %s to accountId:%d", transferAmount, to.getId()), op.getDetails());
 
-		Assertions.assertEquals(0, amount.compareTo(op.getStartBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getStartBalance().getCurrency());
-
-		Assertions.assertEquals(0, BigDecimal.ZERO.compareTo(op.getEndBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getEndBalance().getCurrency());
+		Assertions.assertEquals(0, BigDecimal.ZERO.compareTo(op.getBalance().getAmount()));
+		Assertions.assertEquals(ccy, op.getBalance().getCurrency());
 
 		// To
 		Account newTo = accounts.get(1);
@@ -190,12 +178,9 @@ public class AccountServiceTest extends DatabaseTest {
 		op = operations.get(1);
 		Assertions.assertEquals(newTo.getId(), op.getAccountId());
 		Assertions.assertNotNull(op.getTimestamp());
-		Assertions.assertEquals(String.format("A transfer of %s from %s", transferAmount, from), op.getDetails());
+		Assertions.assertEquals(String.format("A transfer of %s from accountId:%d", transferAmount, from.getId()), op.getDetails());
 
-		Assertions.assertEquals(0, BigDecimal.ZERO.compareTo(op.getStartBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getStartBalance().getCurrency());
-
-		Assertions.assertEquals(0, amount.compareTo(op.getEndBalance().getAmount()));
-		Assertions.assertEquals(ccy, op.getEndBalance().getCurrency());
+		Assertions.assertEquals(0, amount.compareTo(op.getBalance().getAmount()));
+		Assertions.assertEquals(ccy, op.getBalance().getCurrency());
 	}
 }
