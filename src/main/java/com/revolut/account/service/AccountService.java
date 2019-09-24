@@ -92,4 +92,12 @@ public class AccountService {
 			throw new ServiceException(String.format("Transfer from account id:%d to account id:%d failed", fromId, toId), e);
 		}
 	}
+
+	public List<AccountOperation> getOperationsFor(long accountId) throws ServiceException {
+		try {
+			return transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, accountId));
+		} catch (SQLException e) {
+			throw new ServiceException(String.format("Failed to get operations for accountId:%d", accountId), e);
+		}
+	}
 }

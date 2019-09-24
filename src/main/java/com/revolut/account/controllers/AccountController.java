@@ -1,9 +1,12 @@
 package com.revolut.account.controllers;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import com.revolut.ServiceException;
 import com.revolut.account.domain.Account;
+import com.revolut.account.domain.AccountOperation;
 import com.revolut.account.domain.Amount;
 import com.revolut.account.service.AccountService;
 
@@ -11,6 +14,7 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Consumes;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.Produces;
 import io.micronaut.http.annotation.Put;
 
@@ -45,5 +49,11 @@ public class AccountController {
 	public void transfer(long fromId, long toId, @Body Amount.Builder builder) throws ServiceException {
 		Amount amount = builder.build();
 		service.transfer(fromId, toId, amount);
+	}
+
+	@Get("/{accountId}/operations")
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<AccountOperation> listOperations(long accountId) throws ServiceException {
+		return service.getOperationsFor(accountId);
 	}
 }

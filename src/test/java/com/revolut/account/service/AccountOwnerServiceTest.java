@@ -21,7 +21,7 @@ public class AccountOwnerServiceTest extends DatabaseTest {
 	@Inject
 	private AccountOwnerService service;
 
-	static Object[][] createOwnerParams() {
+	public static Object[][] createOwnerParams() {
 		return new Object[][] {
 			new Object[] {"Victor", "Saburovo park", "verevic@revolut.com"},
 			new Object[] {"Victor", "Saburovo park", null},

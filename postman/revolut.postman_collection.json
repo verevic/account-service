@@ -99,7 +99,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"amount\":\"350000\", \"ccy\":\"RUB\"}"
+					"raw": "{\"amount\":\"350000\", \"currency\":\"RUB\"}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/owners/0",
@@ -135,7 +135,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"amount\":\"500000\", \"ccy\":\"RUB\"}"
+					"raw": "{\"amount\":\"500000\", \"currency\":\"RUB\"}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/owners/0",
@@ -171,7 +171,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"amount\":\"1000\", \"ccy\":\"RUB\"}"
+					"raw": "{\"amount\":\"1000\", \"currency\":\"RUB\"}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/accounts/0/deposit",
@@ -208,7 +208,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"amount\":\"1000\", \"ccy\":\"RUB\"}"
+					"raw": "{\"amount\":\"1000\", \"currency\":\"RUB\"}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/accounts/0/withdraw",
@@ -245,7 +245,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"amount\":\"100000\", \"ccy\":\"RUB\"}"
+					"raw": "{\"amount\":\"100000\", \"currency\":\"RUB\"}"
 				},
 				"url": {
 					"raw": "http://{{host}}:{{port}}/accounts/0/1/transfer",

@@ -55,19 +55,22 @@ public class Account {
 
 	// Mutable class for json parser
 	public static class Builder {
-		// Account is normally passed in in a "create" request -- no id...
+		private long id = -1;
 		private long ownerId;
-		private Amount amount;
+		private Amount.Builder amount;
 
+		public void setId(long id) {
+			this.id = id;
+		}
 		public void setOwnerId(long ownerId) {
 			this.ownerId = ownerId;
 		}
-		public void setAmount(Amount amount) {
+		public void setAmount(Amount.Builder amount) {
 			this.amount = amount;
 		}
 
 		public Account build() {
-			return new Account(-1, ownerId, amount);
+			return new Account(id, ownerId, amount.build());
 		}
 	}
 }

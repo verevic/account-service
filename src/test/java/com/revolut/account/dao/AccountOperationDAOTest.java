@@ -60,7 +60,7 @@ public class AccountOperationDAOTest extends DatabaseTest {
 		transactionManager.runWithResult(c -> AccountOperationDAO.createOperation(c,
 			new AccountOperation(-1, account.getId(), null, details, new Amount(changed, ccy))));
 
-		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account));
+		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account.getId()));
 		Assertions.assertNotNull(operations);
 		Assertions.assertEquals(1, operations.size());
 		AccountOperation operation = operations.get(0);

@@ -41,7 +41,7 @@ public class AccountServiceTest extends DatabaseTest {
 		Assertions.assertEquals(0, amount.compareTo(account.getAmount().getAmount()));
 		Assertions.assertEquals(ccy, account.getAmount().getCurrency());
 		// AccountOperation
-		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account));
+		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account.getId()));
 		Assertions.assertNotNull(operations);
 		Assertions.assertEquals(1, operations.size());
 		AccountOperation op = operations.get(0);
@@ -90,7 +90,7 @@ public class AccountServiceTest extends DatabaseTest {
 		BigDecimal expected = amount.add(credit);
 		Assertions.assertEquals(0, expected.compareTo(acc.getAmount().getAmount()));
 		// Operations
-		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account));
+		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account.getId()));
 		Assertions.assertNotNull(operations);
 		Assertions.assertEquals(2, operations.size());
 
@@ -120,7 +120,7 @@ public class AccountServiceTest extends DatabaseTest {
 		BigDecimal expected = amount.subtract(debit);
 		Assertions.assertEquals(0, expected.compareTo(acc.getAmount().getAmount()));
 		// Operations
-		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account));
+		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, account.getId()));
 		Assertions.assertNotNull(operations);
 		Assertions.assertEquals(2, operations.size());
 
@@ -154,7 +154,7 @@ public class AccountServiceTest extends DatabaseTest {
 		Assertions.assertEquals(0, BigDecimal.ZERO.compareTo(newFrom.getAmount().getAmount()));
 		Assertions.assertEquals(ccy, newFrom.getAmount().getCurrency());
 		// Operations
-		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, newFrom));
+		List<AccountOperation> operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, from.getId()));
 		Assertions.assertNotNull(operations);
 		Assertions.assertEquals(2, operations.size());
 		AccountOperation op = operations.get(1);
@@ -171,7 +171,7 @@ public class AccountServiceTest extends DatabaseTest {
 		Assertions.assertEquals(0, amount.compareTo(newTo.getAmount().getAmount()));
 		Assertions.assertEquals(ccy, newTo.getAmount().getCurrency());
 		// Operations
-		operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, to));
+		operations = transactionManager.runWithResult(c -> AccountOperationDAO.getOperationsFor(c, to.getId()));
 		Assertions.assertNotNull(operations);
 		Assertions.assertEquals(2, operations.size());
 

@@ -8,7 +8,6 @@ import java.util.Currency;
 import java.util.Date;
 import java.util.List;
 
-import com.revolut.account.domain.Account;
 import com.revolut.account.domain.AccountOperation;
 import com.revolut.account.domain.Amount;
 import com.revolut.dao.JDBCUtils;
@@ -24,8 +23,8 @@ public class AccountOperationDAO {
 
 	private static final String LIST =
 			"select id, account_id, created, details, balance, ccy from AccountOperation where account_id = %d order by id";
-	public static List<AccountOperation> getOperationsFor(Connection c, Account account) throws SQLException {
-		String sql = String.format(LIST, account.getId());
+	public static List<AccountOperation> getOperationsFor(Connection c, long accountId) throws SQLException {
+		String sql = String.format(LIST, accountId);
 		return JDBCUtils.executeSelect(c, sql, AccountOperationDAO::fromResultSet);
 	}
 

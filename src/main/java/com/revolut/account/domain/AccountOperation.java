@@ -46,4 +46,36 @@ public class AccountOperation {
 	public Amount getBalance() {
 		return balance;
 	}
+
+	/**
+	 * Mutable class for json de/serialization
+	 * @author verevic
+	 */
+	public static class Builder {
+		private long id;
+		private long accountId;
+		private Date timestamp;
+		private String details;
+		private Amount.Builder balance;
+
+		public void setId(long id) {
+			this.id = id;
+		}
+		public void setAccountId(long accountId) {
+			this.accountId = accountId;
+		}
+		public void setTimestamp(Date timestamp) {
+			this.timestamp = timestamp;
+		}
+		public void setDetails(String details) {
+			this.details = details;
+		}
+		public void setBalance(Amount.Builder balance) {
+			this.balance = balance;
+		}
+
+		public AccountOperation build() {
+			return new AccountOperation(id, accountId, timestamp, details, balance.build());
+		}
+	}
 }

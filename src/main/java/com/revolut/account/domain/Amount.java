@@ -58,18 +58,18 @@ public class Amount {
 
 	// Mutable class for json parser
 	public static class Builder {
-		private String ccy;
+		private String currency;
 		private BigDecimal amount;
 
-		public void setCcy(String ccy) {
-			this.ccy = ccy;
+		public void setCurrency(String ccy) {
+			this.currency = ccy;
 		}
 		public void setAmount(BigDecimal amount) {
 			this.amount = amount;
 		}
 
 		public Amount build() {
-			return new Amount(amount, Currency.getInstance(ccy));
+			return new Amount(amount, Currency.getInstance(currency));
 		}
 	}
 }
