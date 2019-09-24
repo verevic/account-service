@@ -1,0 +1,13 @@
+---
+micronaut:
+  application:
+    name: account-data
+
+---
+datasources:
+  default:
+    url: jdbc:hsqldb:mem:revolut;sql.syntax_ora=true
+    username: sa
+    password: ""
+    driverClassName: org.hsqldb.jdbcDriver
+    schema-generate: CREATE_DROP

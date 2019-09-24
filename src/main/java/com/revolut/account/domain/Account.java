@@ -52,5 +52,4 @@ public class Account {
 		}
 		return amount.equals(other.amount);
 	}
-
 }

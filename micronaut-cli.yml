@@ -1,0 +1,5 @@
+profile: service
+defaultPackage: com.revolut.app
+---
+testFramework: junit
+sourceLanguage: java
