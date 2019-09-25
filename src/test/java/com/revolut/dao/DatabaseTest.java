@@ -17,29 +17,12 @@ public class DatabaseTest {
 	@Inject
 	private TransactionManager transactionManager;
 
-//	@BeforeEach
-//	public void dbSetup() throws SQLException {
-//		transactionManager.run(SchemaInitializer::setup);
-//	}
-
 	@AfterEach
 	public void clearDB() throws SQLException {
 		transactionManager.run(c -> {
 			c.createStatement().execute("delete from AccountOperation");
 			c.createStatement().execute("delete from Account");
 			c.createStatement().execute("delete from AccountOwner");
-//			c.createStatement().execute("drop table AccountOperation");
-//			c.createStatement().execute("drop table Account");
-//			c.createStatement().execute("drop table AccountOwner");
 		});
 	}
-
-//	@AfterAll
-//	public static void dbClearAll() throws SQLException {
-//		transactionManager.run(c -> {
-//			c.createStatement().execute("drop table AccountOperation");
-//			c.createStatement().execute("drop table Account");
-//			c.createStatement().execute("drop table AccountOwner");
-//		});
-//	}
 }

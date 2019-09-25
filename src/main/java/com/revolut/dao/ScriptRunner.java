@@ -117,7 +117,6 @@ class ScriptRunner {
                 String trimmedLine = line.trim();
                 if (trimmedLine.startsWith("--")) {
                 	log.debug(trimmedLine);
-//                    println(trimmedLine);
                 } else if (trimmedLine.length() < 1
                         || trimmedLine.startsWith("//")) {
                     // Do nothing
@@ -133,7 +132,6 @@ class ScriptRunner {
                     command.append(" ");
                     Statement statement = conn.createStatement();
 
-//                    println(command);
                     log.debug(command.toString());
 
                     boolean hasResults = false;
@@ -143,10 +141,7 @@ class ScriptRunner {
                         try {
                             statement.execute(command.toString());
                         } catch (SQLException e) {
-//                            e.fillInStackTrace();
                             log.error("Error executing {}", command.toString(), e);
-//                            printlnError("Error executing: " + command);
-//                            printlnError(e);
                         }
                     }
 
@@ -162,18 +157,14 @@ class ScriptRunner {
                         for (int i = 0; i < cols; i++) {
                             String name = md.getColumnLabel(i);
                             sb.append(name).append('\t');
-//                            print(name + "\t");
                         }
-//                        println("");
                         sb.append("\t\t").append(System.getProperty("line.separator"));
 
                         while (rs.next()) {
                             for (int i = 0; i < cols; i++) {
                                 String value = rs.getString(i);
-//                                print(value + "\t");
                                 sb.append(value).append('\t');
                             }
-//                            println("");
                             log.debug(sb.toString());
                         }
                     }

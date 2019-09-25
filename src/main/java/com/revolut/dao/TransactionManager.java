@@ -40,12 +40,7 @@ public class TransactionManager {
 	@PreDestroy
 	public void onDestroying() {
 		log.info("TransactionManager's being destroyed");
-// Use "shutdown=true" connection property instead
-//		try (Connection c = ds.getConnection()) {
-//			c.createStatement().execute("SHUTDOWN");
-//		} catch (SQLException e) {
-//			log.error("Failed to clear DB", e);
-//		}
+// Use "shutdown=true" connection property to shutdown DB
 	}
 
 	public <R> R runWithResult(SQLFunction<Connection, R> action) throws SQLException {
