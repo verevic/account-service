@@ -39,7 +39,7 @@ public class AccountDAO {
 			"update Account set amount = amount-%s where id=%d and ccy='%s';" +
 			"select id, owner_id, amount, ccy from Account where id=%d;";
 	public static Account debit(Connection c, long accountId, Amount amount) throws SQLException {
-		// TODO: make sure cannot withdraw more than have
+		// TODO: check overdraft
 		String sql = String.format(DEBIT, amount.getAmount(), accountId, amount.getCurrency().getCurrencyCode(), accountId);
 		return JDBCUtils.executeSelectSingle(c, sql, AccountDAO::fromResultSet);
 	}

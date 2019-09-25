@@ -1,6 +1,7 @@
 package com.revolut.account.service;
 
 import java.sql.SQLException;
+import java.util.Currency;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -44,10 +45,20 @@ public class AccountService {
 		}
 	}
 
+	private void carrenciesMatch(Account account, Amount amount) throws SQLException {
+		Currency inputCcy = amount.getCurrency();
+		Currency accountCcy = account.getAmount().getCurrency();
+		if (!accountCcy.equals(inputCcy)) {
+			throw new SQLException(String.format("Account(%d) currency(%s) doesn't match operation currency(%s)",
+					account.getId(), accountCcy.getCurrencyCode(), inputCcy.getCurrencyCode()));
+		}
+	}
+
 	public Account deposit(long accountId, Amount amount) throws ServiceException {
 		try {
 			return transactionManager.runWithResult(c -> {
 				Account changed = AccountDAO.credit(c, accountId, amount);
+				carrenciesMatch(changed, amount);
 				AccountOperation operation = new AccountOperation(-1, accountId, null,
 						String.format("A deposit for %s", amount), changed.getAmount());
 				AccountOperationDAO.createOperation(c, operation);
@@ -64,6 +75,7 @@ public class AccountService {
 		try {
 			return transactionManager.runWithResult(c -> {
 				Account changed = AccountDAO.debit(c, accountId, amount);
+				carrenciesMatch(changed, amount);
 				AccountOperation operation = new AccountOperation(-1, accountId, null,
 						String.format("A withdrawal of %s", amount), changed.getAmount());
 				AccountOperationDAO.createOperation(c, operation);
@@ -79,11 +91,13 @@ public class AccountService {
 		try {
 			transactionManager.run(c -> {
 				Account newFrom = AccountDAO.debit(c, fromId, amount);
+				carrenciesMatch(newFrom, amount);
 				AccountOperation operation = new AccountOperation(-1, fromId, null,
 						String.format("A transfer of %s to accountId:%d", amount, toId), newFrom.getAmount());
 				AccountOperationDAO.createOperation(c, operation);
 
 				Account newTo = AccountDAO.credit(c, toId, amount);
+				carrenciesMatch(newTo, amount);
 				operation = new AccountOperation(-1, toId, null,
 						String.format("A transfer of %s from accountId:%d", amount, fromId), newTo.getAmount());
 				AccountOperationDAO.createOperation(c, operation);
