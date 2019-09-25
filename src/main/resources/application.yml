@@ -10,4 +10,3 @@ datasources:
     username: sa
     password: ""
     driverClassName: org.hsqldb.jdbcDriver
-    schema-generate: CREATE_DROP

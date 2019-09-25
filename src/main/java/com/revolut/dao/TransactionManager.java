@@ -1,6 +1,5 @@
 package com.revolut.dao;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -33,7 +32,7 @@ public class TransactionManager {
 		try (Connection c = ds.getConnection()) {
 			SchemaInitializer.setup(c);
 			log.info("TransactionManager created");
-		} catch (SQLException | IOException e) {
+		} catch (SQLException e) {
 			log.error("Failed to setup DB schema", e);
 		}
 	}
