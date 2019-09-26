@@ -15,6 +15,7 @@ import com.revolut.account.domain.AccountOperation;
 import com.revolut.account.domain.AccountOwner;
 import com.revolut.account.domain.Address;
 import com.revolut.account.domain.Amount;
+import com.revolut.exception.ServiceExceptionError;
 
 import io.micronaut.core.type.Argument;
 import io.micronaut.http.HttpRequest;
@@ -22,6 +23,7 @@ import io.micronaut.http.HttpResponse;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.http.client.RxHttpClient;
 import io.micronaut.http.client.annotation.Client;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 import io.micronaut.test.annotation.MicronautTest;
 
 /**
@@ -159,4 +161,35 @@ public class AccountControllerTest {
 		Assertions.assertEquals(0, toAmount.compareTo(op.getBalance().getAmount()));
 		Assertions.assertEquals(ccy, op.getBalance().getCurrency());
 	}
+
+	@Test
+	public void testWithdrawWithDifferentCcy() {
+		AccountOwner owner = createOwner("Victor", "Saburovo park", "verevic@revolut.com");
+
+		BigDecimal initial = new BigDecimal(100000);
+		Currency rub = Currency.getInstance("RUB");
+		Account account = createAccount(owner.getId(), initial, rub);
+
+		BigDecimal debit = new BigDecimal(50000);
+		Currency eur = Currency.getInstance("EUR");
+		Amount withdraw = new Amount(debit, eur);
+
+		HttpRequest<Amount> request = HttpRequest.PUT(String.format("/accounts/%d/withdraw", account.getId()), withdraw);
+		try {
+			client.toBlocking().retrieve(request, Argument.of(Account.Builder.class),
+					Argument.of(ServiceExceptionError.Builder.class));
+			Assertions.fail("BadRequest response is expected");
+		} catch (HttpClientResponseException e) {
+			// TODO: check if there's a better way of testing BadException...
+			HttpResponse<?> response = e.getResponse();
+			Assertions.assertNotNull(response);
+			ServiceExceptionError.Builder builder = response.getBody(ServiceExceptionError.Builder.class).get();
+			ServiceExceptionError err = builder.build();
+			Assertions.assertEquals(String.format("Failed to withdraw %s from accountId:%d", withdraw, account.getId()),
+					err.getMsg());
+			Assertions.assertEquals(String.format("Account(%d) currency(%s) doesn't match operation currency(%s)", account.getId(), rub, eur),
+					err.getReason());
+		}
+	}
+
 }

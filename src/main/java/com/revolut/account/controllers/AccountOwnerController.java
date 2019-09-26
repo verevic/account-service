@@ -5,13 +5,13 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 
-import com.revolut.ServiceException;
 import com.revolut.account.domain.Account;
 import com.revolut.account.domain.AccountOwner;
 import com.revolut.account.domain.Address;
 import com.revolut.account.domain.Amount;
 import com.revolut.account.service.AccountOwnerService;
 import com.revolut.account.service.AccountService;
+import com.revolut.exception.ServiceException;
 
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;

@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.revolut.ServiceException;
 import com.revolut.account.domain.Account;
 import com.revolut.account.domain.AccountOperation;
 import com.revolut.account.domain.Amount;
 import com.revolut.account.service.AccountService;
+import com.revolut.exception.ServiceException;
 
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Body;

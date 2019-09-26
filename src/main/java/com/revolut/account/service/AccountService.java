@@ -6,13 +6,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import com.revolut.ServiceException;
 import com.revolut.account.dao.AccountDAO;
 import com.revolut.account.dao.AccountOperationDAO;
 import com.revolut.account.domain.Account;
 import com.revolut.account.domain.AccountOperation;
 import com.revolut.account.domain.Amount;
 import com.revolut.dao.TransactionManager;
+import com.revolut.exception.ServiceException;
 
 public class AccountService {
 	private final TransactionManager transactionManager;

@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.revolut.ServiceException;
 import com.revolut.account.domain.AccountOwner;
 import com.revolut.account.service.AccountOwnerService;
 import com.revolut.dao.DatabaseTest;
+import com.revolut.exception.ServiceException;
 
 import io.micronaut.test.annotation.MicronautTest;
 

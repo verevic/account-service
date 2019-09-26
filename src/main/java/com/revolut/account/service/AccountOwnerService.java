@@ -6,11 +6,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import com.revolut.ServiceException;
 import com.revolut.account.dao.AccountOwnerDAO;
 import com.revolut.account.domain.AccountOwner;
 import com.revolut.account.domain.Address;
 import com.revolut.dao.TransactionManager;
+import com.revolut.exception.ServiceException;
 
 @Singleton
 public class AccountOwnerService {

@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import com.revolut.ServiceException;
 import com.revolut.account.dao.AccountOperationDAO;
 import com.revolut.account.dao.AccountOwnerDAO;
 import com.revolut.account.domain.Account;
@@ -21,6 +20,7 @@ import com.revolut.account.domain.Amount;
 import com.revolut.account.service.AccountService;
 import com.revolut.dao.DatabaseTest;
 import com.revolut.dao.TransactionManager;
+import com.revolut.exception.ServiceException;
 
 public class AccountServiceTest extends DatabaseTest {
 	@Inject
