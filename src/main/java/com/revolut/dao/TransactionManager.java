@@ -12,8 +12,9 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.revolut.dao.JDBCUtils.SQLFunction;
 import com.revolut.dao.JDBCUtils.ThrowableConsumer;
+import com.revolut.exception.BusinessRuleException;
+import com.revolut.exception.ServiceFunction;
 
 @Singleton
 public class TransactionManager {
@@ -43,35 +44,35 @@ public class TransactionManager {
 // Use "shutdown=true" connection property to shutdown DB
 	}
 
-	public <R> R runWithResult(SQLFunction<Connection, R> action) throws SQLException {
+	public <R> R runWithResult(ServiceFunction<Connection, R> action) throws SQLException, BusinessRuleException {
 		try (Connection c = ds.getConnection()) {
 			c.setAutoCommit(false);
 			try {
 				R result = action.apply(c);
 				c.commit();
 				return result;
-			} catch (SQLException e) {
+			} catch (SQLException | BusinessRuleException e) {
 				c.rollback();
 				throw e;
-			} catch (Exception e) {
+			} catch (Exception unexpected) {
 				c.rollback();
-				throw new SQLException("Caught an exception executing TransactionManager.run", e);
+				throw new SQLException("Caught an exception executing TransactionManager.runWithResult", unexpected);
 			}
 		}
 	}
 
-	public void run(ThrowableConsumer<Connection> action) throws SQLException {
+	public void run(ThrowableConsumer<Connection> action) throws SQLException, BusinessRuleException {
 		try (Connection c = ds.getConnection()) {
 			c.setAutoCommit(false);
 			try {
 				action.accept(c);
 				c.commit();
-			} catch (SQLException e) {
+			} catch (SQLException | BusinessRuleException e) {
 				c.rollback();
 				throw e;
-			} catch (Exception e) {
+			} catch (Exception unexpected) {
 				c.rollback();
-				throw new SQLException("Caught an exception executing TransactionManager.run", e);
+				throw new SQLException("Caught an exception executing TransactionManager.run", unexpected);
 			}
 		}
 	}

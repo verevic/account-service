@@ -14,6 +14,7 @@ import com.revolut.account.domain.AccountOwner;
 import com.revolut.account.domain.Address;
 import com.revolut.dao.DatabaseTest;
 import com.revolut.dao.TransactionManager;
+import com.revolut.exception.BusinessRuleException;
 
 public class AccountOwnerDAOTest extends DatabaseTest {
 	@Inject
@@ -31,7 +32,7 @@ public class AccountOwnerDAOTest extends DatabaseTest {
 
 	@ParameterizedTest
 	@MethodSource("createOwnerParams")
-	public void testCreateOwner(String name, Address address, String email) throws SQLException {
+	public void testCreateOwner(String name, Address address, String email) throws SQLException, BusinessRuleException {
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, new AccountOwner(-1, name, address, email)));
 		Assertions.assertNotNull(owner);
 		Assertions.assertNotEquals(-1, owner.getId());
@@ -44,7 +45,7 @@ public class AccountOwnerDAOTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testGetOwners() throws SQLException {
+	public void testGetOwners() throws SQLException, BusinessRuleException {
 		List<AccountOwner> owners = transactionManager.runWithResult(c -> AccountOwnerDAO.list(c));
 		Assertions.assertNotNull(owners);
 		Assertions.assertEquals(0, owners.size());

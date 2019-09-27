@@ -20,6 +20,7 @@ import com.revolut.account.domain.Amount;
 import com.revolut.account.service.AccountService;
 import com.revolut.dao.DatabaseTest;
 import com.revolut.dao.TransactionManager;
+import com.revolut.exception.BusinessRuleException;
 import com.revolut.exception.ServiceException;
 
 public class AccountServiceTest extends DatabaseTest {
@@ -29,7 +30,7 @@ public class AccountServiceTest extends DatabaseTest {
 	private TransactionManager transactionManager;
 
 	@Test
-	public void testCreateAccount() throws SQLException, ServiceException {
+	public void testCreateAccount() throws SQLException, BusinessRuleException, ServiceException {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 		// New account
@@ -55,7 +56,7 @@ public class AccountServiceTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testGetAccountsFor() throws SQLException, ServiceException {
+	public void testGetAccountsFor() throws SQLException, BusinessRuleException, ServiceException {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 
@@ -74,7 +75,7 @@ public class AccountServiceTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testDeposit() throws SQLException, ServiceException {
+	public void testDeposit() throws SQLException, BusinessRuleException, ServiceException {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 
@@ -104,7 +105,7 @@ public class AccountServiceTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testWithdraw() throws SQLException, ServiceException {
+	public void testWithdraw() throws SQLException, BusinessRuleException, ServiceException {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 
@@ -134,7 +135,7 @@ public class AccountServiceTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testTransfer() throws SQLException, ServiceException {
+	public void testTransfer() throws SQLException, BusinessRuleException, ServiceException {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 
@@ -185,7 +186,7 @@ public class AccountServiceTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testDepositWithDifferentCcy() throws SQLException, ServiceException {
+	public void testDepositWithDifferentCcy() throws SQLException, BusinessRuleException, ServiceException {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 
@@ -219,7 +220,7 @@ public class AccountServiceTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testWithdrawWithDifferentCcy() throws SQLException, ServiceException {
+	public void testWithdrawWithDifferentCcy() throws SQLException, BusinessRuleException, ServiceException {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 
@@ -253,7 +254,7 @@ public class AccountServiceTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testTransferWithDifferentCcy() throws SQLException, ServiceException {
+	public void testTransferWithDifferentCcy() throws SQLException, BusinessRuleException, ServiceException {
 		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
 

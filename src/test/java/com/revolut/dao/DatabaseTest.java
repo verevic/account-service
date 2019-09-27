@@ -6,6 +6,8 @@ import javax.inject.Inject;
 
 import org.junit.jupiter.api.AfterEach;
 
+import com.revolut.exception.BusinessRuleException;
+
 import io.micronaut.test.annotation.MicronautTest;
 
 // Not sure if micronaut injects static fields...
@@ -18,7 +20,7 @@ public class DatabaseTest {
 	private TransactionManager transactionManager;
 
 	@AfterEach
-	public void clearDB() throws SQLException {
+	public void clearDB() throws SQLException, BusinessRuleException {
 		transactionManager.run(c -> {
 			c.createStatement().execute("delete from AccountOperation");
 			c.createStatement().execute("delete from Account");

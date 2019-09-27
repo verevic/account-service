@@ -16,13 +16,14 @@ import com.revolut.account.domain.Address;
 import com.revolut.account.domain.Amount;
 import com.revolut.dao.DatabaseTest;
 import com.revolut.dao.TransactionManager;
+import com.revolut.exception.BusinessRuleException;
 
 public class AccountDAOTest extends DatabaseTest {
 	@Inject
 	private TransactionManager transactionManager;
 
 	@Test
-	public void testCreateAccount() throws SQLException {
+	public void testCreateAccount() throws SQLException, BusinessRuleException {
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c,
 				new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com")));
 
@@ -39,7 +40,7 @@ public class AccountDAOTest extends DatabaseTest {
 
 
 	@Test
-	public void testGetAccounts() throws SQLException {
+	public void testGetAccounts() throws SQLException, BusinessRuleException {
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c,
 				new AccountOwner(-1, "An owner", new Address("Address"), "email")));
 
@@ -58,7 +59,7 @@ public class AccountDAOTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testCredit() throws SQLException {
+	public void testCredit() throws SQLException, BusinessRuleException {
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c,
 				new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com")));
 
@@ -76,7 +77,7 @@ public class AccountDAOTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testDebit() throws SQLException {
+	public void testDebit() throws SQLException, BusinessRuleException {
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c,
 				new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com")));
 

@@ -17,13 +17,14 @@ import com.revolut.account.domain.Address;
 import com.revolut.account.domain.Amount;
 import com.revolut.dao.DatabaseTest;
 import com.revolut.dao.TransactionManager;
+import com.revolut.exception.BusinessRuleException;
 
 public class AccountOperationDAOTest extends DatabaseTest {
 	@Inject
 	private TransactionManager transactionManager;
 
 	@Test
-	public void testCreateOperation() throws SQLException {
+	public void testCreateOperation() throws SQLException, BusinessRuleException {
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c,
 				new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com")));
 
@@ -47,7 +48,7 @@ public class AccountOperationDAOTest extends DatabaseTest {
 	}
 
 	@Test
-	public void testGetOperationsFor() throws SQLException {
+	public void testGetOperationsFor() throws SQLException, BusinessRuleException {
 		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c,
 				new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com")));
 
