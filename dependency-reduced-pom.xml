@@ -77,6 +77,11 @@
                 <artifactId>micronaut-data-processor</artifactId>
                 <version>1.0.0.M1</version>
               </path>
+              <path>
+                <groupId>io.micronaut.configuration</groupId>
+                <artifactId>micronaut-openapi</artifactId>
+                <version>${micronaut.version}</version>
+              </path>
             </annotationProcessorPaths>
           </configuration>
         </plugin>
@@ -201,6 +206,7 @@
     </dependencies>
   </dependencyManagement>
   <properties>
+    <swagger.version>2.0.9</swagger.version>
     <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
     <micronaut.version>1.2.2</micronaut.version>
     <hsqldb.version>2.5.0</hsqldb.version>

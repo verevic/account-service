@@ -1,7 +1,25 @@
 ---
+application:
+  api:
+    swagger:
+      path: /api-docs/swagger
+      version: 3.19.4
+      layout: StandaloneLayout
+      deepLinking: true
+      urls:
+      - name: account-service
+        url: /api-docs/swagger/account-service-0.1.yml
+            #- name: spec2
+            #  url: url2
+---
 micronaut:
   application:
     name: account-data
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: ${application.api.swagger.path}/**
 
 ---
 datasources:
