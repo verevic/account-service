@@ -11,7 +11,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/owners/0",
+					"raw": "http://{{host}}:{{port}}/owners/0/listAccounts",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -19,7 +19,8 @@
 					"port": "{{port}}",
 					"path": [
 						"owners",
-						"0"
+						"0",
+						"listAccounts"
 					]
 				},
 				"description": "List owners"
@@ -102,7 +103,7 @@
 					"raw": "{\"amount\":\"350000\", \"currency\":\"RUB\"}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/owners/0",
+					"raw": "http://{{host}}:{{port}}/owners/0/createAccount",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -110,7 +111,8 @@
 					"port": "{{port}}",
 					"path": [
 						"owners",
-						"0"
+						"0",
+						"createAccount"
 					]
 				},
 				"description": "Create an owner"
@@ -138,7 +140,7 @@
 					"raw": "{\"amount\":\"500000\", \"currency\":\"RUB\"}"
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/owners/0",
+					"raw": "http://{{host}}:{{port}}/owners/0/createAccount",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -146,7 +148,8 @@
 					"port": "{{port}}",
 					"path": [
 						"owners",
-						"0"
+						"0",
+						"createAccount"
 					]
 				},
 				"description": "Create an owner"

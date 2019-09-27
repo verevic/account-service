@@ -314,4 +314,38 @@ public class AccountServiceTest extends DatabaseTest {
 		operations = service.getOperationsFor(account.getId());
 		Assertions.assertEquals(1, operations.size());
 	}
+
+	@Test
+	public void testWithdrawWithOverdraft() throws SQLException, BusinessRuleException, ServiceException {
+		AccountOwner ao = new AccountOwner(-1, "Victor", new Address("Saburovo park"), "verevic@revolut.com");
+		AccountOwner owner = transactionManager.runWithResult(c -> AccountOwnerDAO.createOwner(c, ao));
+
+		BigDecimal initial = new BigDecimal("3.5E+5");
+		Currency ccy = Currency.getInstance("RUB");
+		Account account = service.createAccount(owner.getId(), new Amount(initial, ccy));
+	
+		BigDecimal debit = new BigDecimal(350000.01);
+		Amount debitAmount = new Amount(debit, ccy);
+
+		try {
+			service.withdraw(account.getId(), debitAmount);
+			Assertions.fail("The call is expected to fail");
+		} catch (ServiceException e) {
+			Assertions.assertEquals(String.format("Failed to withdraw %s from accountId:%d", debitAmount, account.getId()), e.getMessage());
+			Throwable t = e.getCause();
+			Assertions.assertNotNull(t);
+			Assertions.assertEquals(String.format("Account(%d) balance cannot be negative", account.getId()), t.getMessage());
+		}
+		// balance
+		List<Account> accounts = service.getAccountsFor(owner.getId());
+		Assertions.assertEquals(1, accounts.size());
+		account = accounts.get(0);
+		Assertions.assertEquals(0, initial.compareTo(account.getAmount().getAmount()));
+		Assertions.assertEquals(ccy, account.getAmount().getCurrency());
+		// operations
+		List<AccountOperation> operations = service.getOperationsFor(account.getId());
+		Assertions.assertEquals(1, operations.size());
+	}
+
+	
 }

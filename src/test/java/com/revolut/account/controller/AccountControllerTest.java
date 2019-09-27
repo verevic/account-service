@@ -46,14 +46,14 @@ public class AccountControllerTest {
 	}
 
 	private Account createAccount(long ownerId, BigDecimal amount, Currency ccy) {
-		HttpRequest<Amount> request = HttpRequest.POST(String.format("/owners/%d", ownerId), new Amount(amount, ccy));
+		HttpRequest<Amount> request = HttpRequest.POST(String.format("/owners/%d/createAccount", ownerId), new Amount(amount, ccy));
 		Account.Builder builder = client.toBlocking().retrieve(request, Account.Builder.class);
 		Assertions.assertNotNull(builder);
 		return builder.build();
 	}
 
 	private List<Account> getAccounts(long ownerId) {
-		HttpRequest<Void> request =  HttpRequest.GET(String.format("owners/%d", ownerId));
+		HttpRequest<Void> request =  HttpRequest.GET(String.format("owners/%d/listAccounts", ownerId));
 		List<Account.Builder> builders = client.toBlocking().retrieve(request, Argument.listOf(Account.Builder.class));
 		return builders.stream().map(Account.Builder::build).collect(Collectors.toList());
 	}
@@ -192,4 +192,71 @@ public class AccountControllerTest {
 		}
 	}
 
+	@Test
+	public void testWithdrawWithOverdraft() {
+		AccountOwner owner = createOwner("Victor", "Saburovo park", "verevic@revolut.com");
+
+		BigDecimal initial = new BigDecimal(100_000);
+		Currency rub = Currency.getInstance("RUB");
+		Account account = createAccount(owner.getId(), initial, rub);
+
+		BigDecimal debit = new BigDecimal(100_001);
+		Amount withdraw = new Amount(debit, rub);
+
+		HttpRequest<Amount> request = HttpRequest.PUT(String.format("/accounts/%d/withdraw", account.getId()), withdraw);
+		try {
+			client.toBlocking().retrieve(request, null, Argument.of(ServiceExceptionError.Builder.class));
+			Assertions.fail("BadRequest response is expected");
+		} catch (HttpClientResponseException e) {
+			// TODO: check if there's a better way of testing BadException...
+			HttpResponse<?> response = e.getResponse();
+			Assertions.assertNotNull(response);
+			ServiceExceptionError.Builder builder = response.getBody(ServiceExceptionError.Builder.class).get();
+			ServiceExceptionError err = builder.build();
+			Assertions.assertEquals(String.format("Failed to withdraw %s from accountId:%d", withdraw, account.getId()),
+					err.getMsg());
+			Assertions.assertEquals(String.format("Account(%d) balance cannot be negative", account.getId()), err.getReason());
+		}
+	}
+
+	@Test
+	public void testTransferWithOverdraft() {
+		AccountOwner owner = createOwner("Victor", "Saburovo park", "verevic@revolut.com");
+		
+		Currency ccy = Currency.getInstance("RUB");
+		BigDecimal initialFrom = new BigDecimal(100_000);
+		Account from = createAccount(owner.getId(), initialFrom, ccy);
+		
+		BigDecimal initialTo = new BigDecimal(70_000);
+		Account to = createAccount(owner.getId(), initialTo, ccy);
+
+		BigDecimal transfer = new BigDecimal(200_000);
+
+		HttpRequest<Amount> request =
+				HttpRequest.PUT(String.format("/accounts/%d/%d/transfer", from.getId(), to.getId()), new Amount(transfer, ccy));
+		try {
+			client.toBlocking().exchange(request, null, Argument.of(ServiceExceptionError.Builder.class));
+			Assertions.fail("BadRequest response is expected");
+		} catch (HttpClientResponseException e) {
+			// accounts
+			List<Account> accounts = getAccounts(owner.getId());
+			Assertions.assertEquals(2, accounts.size());
+			Account newFrom = accounts.get(0);
+			Assertions.assertEquals(from.getId(), newFrom.getId());
+			Assertions.assertEquals(0, initialFrom.compareTo(newFrom.getAmount().getAmount()));
+			Assertions.assertEquals(ccy, newFrom.getAmount().getCurrency());
+
+			Account newTo = accounts.get(1);
+			Assertions.assertEquals(to.getId(), newTo.getId());
+			Assertions.assertEquals(0, initialTo.compareTo(newTo.getAmount().getAmount()));
+			Assertions.assertEquals(ccy, newTo.getAmount().getCurrency());
+
+			// operations
+			List<AccountOperation> operations = getOperations(from.getId());
+			Assertions.assertEquals(1, operations.size());
+
+			operations = getOperations(to.getId());
+			Assertions.assertEquals(1, operations.size());
+		}
+	}
 }

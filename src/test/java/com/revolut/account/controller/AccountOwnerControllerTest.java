@@ -58,7 +58,7 @@ public class AccountOwnerControllerTest {
 	}
 
 	private Account createAccount(long ownerId, BigDecimal amount, Currency ccy) {
-		HttpRequest<Amount> request = HttpRequest.POST(String.format("/%d", ownerId), new Amount(amount, ccy));
+		HttpRequest<Amount> request = HttpRequest.POST(String.format("/%d/createAccount", ownerId), new Amount(amount, ccy));
 		Account.Builder builder = client.toBlocking().retrieve(request, Account.Builder.class);
 		Assertions.assertNotNull(builder);
 		return builder.build();
@@ -83,7 +83,7 @@ public class AccountOwnerControllerTest {
 		Currency ccy = Currency.getInstance("RUB");
 		Account account = createAccount(owner.getId(), amount, ccy);
 		// list
-		HttpRequest<Void> request = HttpRequest.GET(String.format("/%d", owner.getId()));
+		HttpRequest<Void> request = HttpRequest.GET(String.format("/%d/listAccounts", owner.getId()));
 		List<Account.Builder> builders = client.toBlocking().retrieve(request, Argument.listOf(Account.Builder.class));
 		Assertions.assertNotNull(builders);
 		Account returned = builders.get(builders.size() - 1).build();

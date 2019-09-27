@@ -49,13 +49,13 @@ public class AccountOwnerController {
 		return ownerService.createOwner(owner.getName(), address, owner.getEmail());
 	}
 
-	@Get("/{ownerId}")
+	@Get("/{ownerId}/listAccounts")
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Account> listAccounts(long ownerId) throws ServiceException {
 		return accountService.getAccountsFor(ownerId);
 	}
 
-	@Post("/{ownerId}")
+	@Post("/{ownerId}/createAccount")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Account createAccount(long ownerId, @Body Amount.Builder amountBuilder) throws ServiceException {
