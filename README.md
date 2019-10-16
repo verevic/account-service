@@ -1,2 +1,2 @@
 # account-service
-Repository for the test task
+Simple bookeeping htpp service(owner, account + operations)
