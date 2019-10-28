@@ -1,2 +1,2 @@
 # account-service
-Simple bookeeping htpp service(owner, account + operations)
+Simple bookeeping REST service(owner, account + operations)
